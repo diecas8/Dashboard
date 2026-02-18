@@ -3,335 +3,166 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard HMP · CSV + Interactivo</title>
-  <!-- Chart.js, Font Awesome, Google Fonts -->
+  <title>Dashboard Genérico · Proyectos flexibles</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    /* (mismos estilos que antes, ligeramente adaptados) */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', sans-serif;
       background: #f4f7fb;
       color: #1a2639;
       padding: 24px;
     }
-    .dashboard {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
+    .dashboard { max-width: 1400px; margin: 0 auto; }
     .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      display: flex; justify-content: space-between; align-items: center;
       background: linear-gradient(135deg, #0b3b2c, #1e6f5c);
-      color: white;
-      padding: 22px 32px;
-      border-radius: 28px;
-      margin-bottom: 28px;
+      color: white; padding: 22px 32px; border-radius: 28px; margin-bottom: 28px;
       box-shadow: 0 12px 24px -8px rgba(0,60,40,0.3);
     }
     .header h1 {
-      font-weight: 600;
-      font-size: 1.9rem;
-      letter-spacing: -0.02em;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      font-weight: 600; font-size: 1.9rem; display: flex; align-items: center; gap: 12px;
     }
-    .header h1 i {
-      font-size: 2.2rem;
-    }
-    .header-right {
-      display: flex;
-      gap: 24px;
-      align-items: center;
-    }
+    .header-right { display: flex; gap: 24px; align-items: center; }
     .badge-date {
-      background: rgba(255,255,255,0.15);
-      padding: 8px 18px;
-      border-radius: 60px;
-      font-weight: 500;
-      backdrop-filter: blur(4px);
+      background: rgba(255,255,255,0.15); padding: 8px 18px; border-radius: 60px;
+      font-weight: 500; backdrop-filter: blur(4px);
     }
     .grid-2col {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 24px;
-      margin-bottom: 28px;
+      display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px; margin-bottom: 28px;
     }
     .card {
-      background: white;
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.02), 0 2px 6px rgba(0,40,20,0.05);
-      border: 1px solid #e6edf4;
-      transition: box-shadow 0.2s;
-    }
-    .card:hover {
-      box-shadow: 0 16px 28px -8px rgba(20,80,60,0.12);
+      background: white; border-radius: 24px; padding: 24px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.02); border: 1px solid #e6edf4;
     }
     .card-title {
-      font-weight: 600;
-      font-size: 1.3rem;
-      margin-bottom: 18px;
-      color: #0f3d3a;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border-bottom: 2px dashed #cbd5e1;
+      font-weight: 600; font-size: 1.3rem; margin-bottom: 18px; color: #0f3d3a;
+      display: flex; align-items: center; gap: 8px; border-bottom: 2px dashed #cbd5e1;
       padding-bottom: 10px;
     }
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-    .form-group label {
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: #2c4a4a;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-    }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { font-weight: 600; font-size: 0.85rem; color: #2c4a4a; display: block; margin-bottom: 5px; }
     .form-group input, .form-group select {
-      padding: 12px 16px;
-      border: 1.5px solid #dde7f0;
-      border-radius: 16px;
-      font-size: 0.95rem;
-      transition: 0.2s;
-      background: #f9fcff;
+      width: 100%; padding: 12px 16px; border: 1.5px solid #dde7f0; border-radius: 16px;
+      font-size: 0.95rem; background: #f9fcff;
     }
-    .form-group input:focus, .form-group select:focus {
-      outline: none;
-      border-color: #1e6f5c;
-      box-shadow: 0 0 0 3px rgba(30,111,92,0.2);
-      background: white;
-    }
+    .form-group input:focus { border-color: #1e6f5c; box-shadow: 0 0 0 3px rgba(30,111,92,0.2); outline: none; }
     .button-primary {
-      background: #1e6f5c;
-      border: none;
-      color: white;
-      font-weight: 600;
-      padding: 14px 24px;
-      border-radius: 40px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.2s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
+      background: #1e6f5c; border: none; color: white; font-weight: 600; padding: 14px 24px;
+      border-radius: 40px; font-size: 1rem; cursor: pointer; display: inline-flex;
+      align-items: center; justify-content: center; gap: 10px; width: 100%; margin-top: 8px;
       box-shadow: 0 6px 12px rgba(30,111,92,0.3);
-      width: 100%;
-      margin-top: 8px;
     }
-    .button-primary:hover {
-      background: #0f4f3f;
-      transform: scale(1.01);
-      box-shadow: 0 10px 18px rgba(20,80,60,0.4);
-    }
+    .button-primary:hover { background: #0f4f3f; }
     .button-secondary {
-      background: white;
-      border: 1.5px solid #cbd5e1;
-      color: #2c4a4a;
-      padding: 10px 16px;
-      border-radius: 40px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+      background: white; border: 1.5px solid #cbd5e1; color: #2c4a4a; padding: 10px 16px;
+      border-radius: 40px; font-weight: 500; cursor: pointer; display: inline-flex;
+      align-items: center; gap: 6px;
     }
-    .button-secondary:hover {
-      background: #f1f9f6;
-      border-color: #1e6f5c;
+    .button-secondary:hover { background: #f1f9f6; border-color: #1e6f5c; }
+    /* categorías */
+    .categoria-config {
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px;
+      background: #f9fcff; padding: 16px; border-radius: 20px;
     }
+    .categoria-item {
+      background: white; border: 1px solid #d1e2e8; border-radius: 40px; padding: 6px 16px;
+      display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem;
+    }
+    .categoria-item i { color: #b91c1c; cursor: pointer; }
+    .categoria-item i:hover { color: #7f1d1d; }
+    .add-categoria {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;
+    }
+    .add-categoria input { flex: 1; min-width: 140px; }
     .stats-mini {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 20px;
+      display: flex; flex-wrap: wrap; gap: 14px; margin-top: 20px;
     }
     .stat-item {
-      flex: 1 0 100px;
-      background: #f1f9f6;
-      border-radius: 20px;
-      padding: 14px 8px;
-      text-align: center;
-      border: 1px solid #c0e0d6;
+      flex: 1 0 120px; background: #f1f9f6; border-radius: 20px; padding: 14px 8px;
+      text-align: center; border: 1px solid #c0e0d6;
     }
-    .stat-item h4 {
-      font-size: 0.8rem;
-      color: #0f4f3f;
-      font-weight: 500;
-    }
-    .stat-item .value {
-      font-size: 1.7rem;
-      font-weight: 700;
-      color: #0b3b2c;
-      line-height: 1.2;
-    }
-    .table-wrapper {
-      max-height: 280px;
-      overflow-y: auto;
-      border-radius: 20px;
-      border: 1px solid #e2eef2;
-      margin-top: 16px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-    }
-    th {
-      background: #e2f0ec;
-      color: #0b3b2c;
-      font-weight: 600;
-      font-size: 0.8rem;
-      padding: 12px 8px;
-      position: sticky;
-      top: 0;
-    }
-    td {
-      padding: 10px 8px;
-      border-bottom: 1px solid #d1e2e8;
-      font-size: 0.85rem;
-    }
-    .actions i {
-      margin: 0 5px;
-      color: #4b6b6b;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .actions i:hover {
-      color: #1e6f5c;
-      transform: scale(1.1);
-    }
-    .badge {
-      background: #cbe9e1;
-      padding: 4px 8px;
-      border-radius: 40px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: #0b3b2c;
-    }
-    .chart-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-    .chart-type-selector {
-      display: flex;
-      gap: 8px;
-      background: #eef5f2;
-      padding: 5px;
-      border-radius: 48px;
-    }
-    .chart-type-btn {
-      background: transparent;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 40px;
-      font-weight: 500;
-      color: #2c4a4a;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .chart-type-btn.active {
-      background: white;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      color: #1e6f5c;
-      font-weight: 600;
-    }
-    .chart-container {
-      position: relative;
-      height: 340px;
-      width: 100%;
-    }
-    .footer-bar {
-      display: flex;
-      justify-content: flex-end;
-      gap: 16px;
-      margin-top: 24px;
-      flex-wrap: wrap;
-    }
-    .csv-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 16px;
-      align-items: center;
-    }
-    #fileInput {
-      display: none;
-    }
-    .toast-message {
-      background: #1e6f5c;
-      color: white;
-      padding: 8px 16px;
-      border-radius: 60px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      margin-left: auto;
-    }
+    .stat-item h4 { font-size: 0.8rem; color: #0f4f3f; font-weight: 500; }
+    .stat-item .value { font-size: 1.5rem; font-weight: 700; color: #0b3b2c; line-height: 1.2; }
+    .table-wrapper { max-height: 280px; overflow-y: auto; border-radius: 20px; border: 1px solid #e2eef2; margin-top: 16px; }
+    table { width: 100%; border-collapse: collapse; background: white; }
+    th { background: #e2f0ec; color: #0b3b2c; font-weight: 600; font-size: 0.8rem; padding: 12px 8px; position: sticky; top: 0; }
+    td { padding: 10px 8px; border-bottom: 1px solid #d1e2e8; font-size: 0.85rem; }
+    .actions i { margin: 0 5px; color: #4b6b6b; cursor: pointer; }
+    .actions i:hover { color: #1e6f5c; }
+    .badge { background: #cbe9e1; padding: 4px 8px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; color: #0b3b2c; }
+    .chart-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; }
+    .chart-type-selector { display: flex; gap: 8px; background: #eef5f2; padding: 5px; border-radius: 48px; }
+    .chart-type-btn { background: transparent; border: none; padding: 8px 16px; border-radius: 40px; font-weight: 500; color: #2c4a4a; cursor: pointer; }
+    .chart-type-btn.active { background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); color: #1e6f5c; font-weight: 600; }
+    .chart-container { position: relative; height: 340px; width: 100%; }
+    .footer-bar { display: flex; justify-content: flex-end; gap: 16px; margin-top: 24px; flex-wrap: wrap; }
+    .csv-actions { display: flex; gap: 12px; margin-top: 16px; align-items: center; flex-wrap: wrap; }
+    #fileInput { display: none; }
+    .toast-message { background: #1e6f5c; color: white; padding: 8px 16px; border-radius: 60px; font-size: 0.9rem; }
   </style>
 </head>
 <body>
 <div class="dashboard">
   <!-- CABECERA -->
   <div class="header">
-    <h1><i class="fas fa-seedling"></i> Dashboard HMP · Monitoreo de Hectáreas</h1>
+    <h1><i class="fas fa-cubes"></i> Dashboard Genérico · Proyectos flexibles</h1>
     <div class="header-right">
       <span class="badge-date"><i class="far fa-calendar-alt"></i> <span id="fechaActual"></span></span>
       <span class="badge-date"><i class="fas fa-database"></i> <span id="totalRegistros">0</span> registros</span>
     </div>
   </div>
 
-  <!-- COLUMNAS: FORMULARIO + TABLA -->
+  <!-- FILA: CONFIGURACIÓN DE CATEGORÍAS (nueva) -->
+  <div class="card" style="margin-bottom: 24px;">
+    <div class="card-title"><i class="fas fa-cog"></i> Configurar categorías del proyecto</div>
+    <div id="categoriasContainer" class="categoria-config">
+      <!-- aquí se insertarán dinámicamente las categorías existentes -->
+    </div>
+    <div class="add-categoria">
+      <input type="text" id="nuevaCategoriaNombre" placeholder="Ej. Árboles plantados" />
+      <input type="text" id="nuevaCategoriaUnidad" placeholder="unidad (opcional)" style="width: 120px;" />
+      <button class="button-secondary" id="btnAgregarCategoria"><i class="fas fa-plus"></i> Añadir</button>
+    </div>
+    <p style="font-size:0.8rem; color:#4b6b6b; margin-top: 12px;">
+      <i class="fas fa-info-circle"></i> Las categorías se guardan automáticamente. Al añadir o quitar, el formulario se actualiza.
+    </p>
+  </div>
+
+  <!-- COLUMNAS: FORMULARIO DINÁMICO + TABLA -->
   <div class="grid-2col">
-    <!-- Tarjeta: formulario de ingreso y carga CSV -->
+    <!-- Tarjeta: formulario de ingreso (campos generados) -->
     <div class="card">
-      <div class="card-title"><i class="fas fa-pen-alt"></i> Ingresar nueva medición HMP</div>
-      <form id="hmpForm">
-        <div class="form-grid">
+      <div class="card-title"><i class="fas fa-pen-alt"></i> Nuevo registro</div>
+      <form id="registroForm">
+        <div class="form-grid" style="display: grid; grid-template-columns: repeat(2,1fr); gap: 16px;">
           <div class="form-group">
             <label><i class="fas fa-map-marker-alt"></i> Municipio</label>
-            <input type="text" id="municipio" placeholder="Ej. San Lorenzo" required>
+            <input type="text" id="municipio" required>
           </div>
           <div class="form-group">
             <label><i class="fas fa-tree"></i> Vereda</label>
-            <input type="text" id="vereda" placeholder="Ej. El Progreso" required>
+            <input type="text" id="vereda" required>
           </div>
           <div class="form-group">
             <label><i class="fas fa-user-check"></i> Responsable</label>
-            <input type="text" id="responsable" placeholder="Nombre completo" required>
+            <input type="text" id="responsable" required>
           </div>
           <div class="form-group">
             <label><i class="fas fa-calendar"></i> Fecha</label>
             <input type="date" id="fecha" required>
           </div>
         </div>
-        <div style="margin: 12px 0 8px; font-weight: 600; color: #1e6f5c;">Hectáreas por categoría</div>
-        <div class="form-grid">
-          <div class="form-group"><label>HAS CV</label><input type="number" id="cv" step="0.1" value="0" required></div>
-          <div class="form-group"><label>HAS AF</label><input type="number" id="af" step="0.1" value="0" required></div>
-          <div class="form-group"><label>HAS ADP</label><input type="number" id="adp" step="0.1" value="0" required></div>
-          <div class="form-group"><label>HAS MC</label><input type="number" id="mc" step="0.1" value="0" required></div>
-          <div class="form-group"><label>HAS EB</label><input type="number" id="eb" step="0.1" value="0" required></div>
+
+        <!-- Campos dinámicos para categorías -->
+        <div style="margin: 16px 0 8px; font-weight: 600; color: #1e6f5c;">Valores por categoría</div>
+        <div id="camposCategorias" class="form-grid" style="grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 12px;">
+          <!-- se llena con JS -->
         </div>
+
         <button type="submit" class="button-primary"><i class="fas fa-plus-circle"></i> Agregar registro</button>
       </form>
 
@@ -343,36 +174,35 @@
         <span id="csvStatus" class="toast-message"></span>
       </div>
 
-      <!-- mini stats dinámicas -->
+      <!-- mini stats dinámicas (totales por categoría) -->
       <div class="stats-mini" id="miniStats">
-        <div class="stat-item"><h4>Total HAS</h4><div class="value" id="totalHectareas">0</div></div>
-        <div class="stat-item"><h4>HAS CV</h4><div class="value" id="sumCV">0</div></div>
-        <div class="stat-item"><h4>HAS AF</h4><div class="value" id="sumAF">0</div></div>
-        <div class="stat-item"><h4>HAS MC</h4><div class="value" id="sumMC">0</div></div>
+        <!-- se llena con JS -->
       </div>
     </div>
 
     <!-- Tarjeta: tabla de registros e indicadores -->
     <div class="card">
       <div class="card-title"><i class="fas fa-table"></i> Últimos registros</div>
-      <div class="table-wrapper" id="tablaRegistros">
+      <div class="table-wrapper">
         <table>
-          <thead><tr><th>Municipio</th><th>Vereda</th><th>Total HAS</th><th></th></tr></thead>
+          <thead id="tablaHeader">
+            <tr><th>Municipio</th><th>Vereda</th><th>Total</th><th></th></tr>
+          </thead>
           <tbody id="tablaBody"></tbody>
         </table>
       </div>
-      <!-- indicadores de crecimiento estáticos -->
+      <!-- indicadores de crecimiento estáticos (opcional) -->
       <div style="display: flex; gap: 16px; margin-top: 20px;">
         <div style="background: #f9f3e6; border-radius: 20px; padding: 12px 20px; flex:1; border-left: 5px solid #e6b12e;">
-          <small style="color:#9b7b3c;">Retención</small>
+          <small>Retención</small>
           <div style="font-weight:700; font-size: 1.6rem;">99.28%</div>
         </div>
         <div style="background: #e6f1f9; border-radius: 20px; padding: 12px 20px; flex:1; border-left: 5px solid #2e7ab6;">
-          <small style="color:#2a5f7a;">Expansión</small>
+          <small>Expansión</small>
           <div style="font-weight:700; font-size: 1.6rem;">2.86%</div>
         </div>
         <div style="background: #e2f0e9; border-radius: 20px; padding: 12px 20px; flex:1; border-left: 5px solid #1e6f5c;">
-          <small style="color:#1e6f5c;">Ventas</small>
+          <small>Ventas</small>
           <div style="font-weight:700; font-size: 1.6rem;">$58.5K</div>
         </div>
       </div>
@@ -382,7 +212,7 @@
   <!-- SECCIÓN GRÁFICO INTERACTIVO -->
   <div class="card" style="margin-top: 8px;">
     <div class="chart-header">
-      <div class="card-title" style="margin-bottom:0;"><i class="fas fa-chart-bar"></i> Visualización de hectáreas</div>
+      <div class="card-title" style="margin-bottom:0;"><i class="fas fa-chart-bar"></i> Visualización</div>
       <div class="chart-type-selector" id="chartTypeSelector">
         <button class="chart-type-btn active" data-type="bar"><i class="fas fa-chart-bar"></i> Barras</button>
         <button class="chart-type-btn" data-type="line"><i class="fas fa-chart-line"></i> Líneas</button>
@@ -402,232 +232,303 @@
 
 <script>
   (function() {
-    // ----- CONSTANTES Y ESTADO -----
-    const STORAGE_KEY = 'hmp_detailed_data';
-    let hmpData = [];               // cada objeto: { id, municipio, vereda, responsable, fecha, hectareas: {cv,af,adp,mc,eb}, total }
+    // ---------- ESTADO GLOBAL ----------
+    const STORAGE_KEY = 'generic_dashboard';
+    let categorias = [];                // { id, nombre, unidad }
+    let registros = [];                 // { id, municipio, vereda, responsable, fecha, valores: { idCategoria: numero } }
+
     let chartInstance = null;
 
     // elementos del DOM
-    const form = document.getElementById('hmpForm');
+    const categoriasContainer = document.getElementById('categoriasContainer');
+    const camposCategoriasDiv = document.getElementById('camposCategorias');
+    const miniStats = document.getElementById('miniStats');
+    const tablaHeader = document.getElementById('tablaHeader');
     const tablaBody = document.getElementById('tablaBody');
     const totalRegistrosSpan = document.getElementById('totalRegistros');
-    const totalHectareasSpan = document.getElementById('totalHectareas');
-    const sumCV = document.getElementById('sumCV');
-    const sumAF = document.getElementById('sumAF');
-    const sumMC = document.getElementById('sumMC');
     const csvStatus = document.getElementById('csvStatus');
     const fileInput = document.getElementById('fileInput');
-    const btnCargarCSV = document.getElementById('btnCargarCSV');
-    const btnDescargarPlantilla = document.getElementById('btnDescargarPlantilla');
 
     // fecha actual por defecto
     document.getElementById('fecha').valueAsDate = new Date();
+    document.getElementById('fechaActual').textContent = new Date().toLocaleDateString('es-ES', { year:'numeric', month:'long', day:'numeric' });
 
-    // ----- FUNCIONES DE PERSISTENCIA -----
+    // ---------- FUNCIONES DE PERSISTENCIA ----------
     function guardarEnStorage() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(hmpData));
+      const estado = { categorias, registros };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
     }
 
     function cargarDeStorage() {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
-        try { hmpData = JSON.parse(stored); } catch(e){ hmpData = []; }
-      } else {
-        // datos de ejemplo
-        hmpData = [
-          { id: Date.now() - 10000, municipio: 'San Lorenzo', vereda: 'El Progreso', responsable: 'Ana López', fecha: '2025-02-10', hectareas: { cv: 5.2, af: 3.1, adp: 1.5, mc: 4.0, eb: 2.3 }, total: 16.1 },
-          { id: Date.now() - 5000, municipio: 'Santa Rosa', vereda: 'La Laguna', responsable: 'Carlos Díaz', fecha: '2025-02-14', hectareas: { cv: 2.8, af: 6.0, adp: 2.2, mc: 1.1, eb: 3.4 }, total: 15.5 },
+        try {
+          const { categorias: cats, registros: regs } = JSON.parse(stored);
+          categorias = cats || [];
+          registros = regs || [];
+        } catch (e) { /* usar valores por defecto */ }
+      }
+      if (!categorias.length) {
+        // categorías de ejemplo
+        categorias = [
+          { id: 'cat1', nombre: 'Árboles plantados', unidad: 'unidades' },
+          { id: 'cat2', nombre: 'Kits de insumos', unidad: 'kits' },
+          { id: 'cat3', nombre: 'Capacitaciones', unidad: 'eventos' },
         ];
       }
-    }
-
-    // ----- FUNCIONES DE ACTUALIZACIÓN DE UI -----
-    function actualizarTabla() {
-      const tbody = tablaBody;
-      tbody.innerHTML = '';
-      if (hmpData.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:30px;">No hay registros</td></tr>';
-      } else {
-        hmpData.slice().reverse().forEach(entry => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${entry.municipio}</td>
-            <td>${entry.vereda}</td>
-            <td><span class="badge">${entry.total.toFixed(1)} HAS</span></td>
-            <td class="actions">
-              <i class="fas fa-edit" title="Editar" data-id="${entry.id}"></i>
-              <i class="fas fa-trash-alt" title="Eliminar" data-id="${entry.id}"></i>
-            </td>
-          `;
-          tbody.appendChild(row);
+      if (!registros.length) {
+        // registro de ejemplo
+        const valoresEjemplo = {};
+        categorias.forEach(c => { valoresEjemplo[c.id] = Math.floor(Math.random()*10)+1; });
+        registros.push({
+          id: Date.now() - 5000,
+          municipio: 'San Lorenzo',
+          vereda: 'El Progreso',
+          responsable: 'Ana López',
+          fecha: '2025-02-10',
+          valores: valoresEjemplo
         });
       }
-
-      totalRegistrosSpan.textContent = hmpData.length;
-
-      let totalH = 0, sum_cv = 0, sum_af = 0, sum_mc = 0;
-      hmpData.forEach(e => {
-        totalH += e.total || 0;
-        sum_cv += e.hectareas.cv || 0;
-        sum_af += e.hectareas.af || 0;
-        sum_mc += e.hectareas.mc || 0;
-      });
-      totalHectareasSpan.textContent = totalH.toFixed(1);
-      sumCV.textContent = sum_cv.toFixed(1);
-      sumAF.textContent = sum_af.toFixed(1);
-      sumMC.textContent = sum_mc.toFixed(1);
     }
 
+    // ---------- RENDERIZADO DE CATEGORÍAS ----------
+    function renderCategorias() {
+      let html = '';
+      categorias.forEach(cat => {
+        html += `<span class="categoria-item">
+          ${cat.nombre} ${cat.unidad ? '('+cat.unidad+')' : ''}
+          <i class="fas fa-times" data-id="${cat.id}" title="Eliminar categoría"></i>
+        </span>`;
+      });
+      categoriasContainer.innerHTML = html;
+
+      // Asignar evento eliminar a cada ícono
+      document.querySelectorAll('.categoria-item i').forEach(icon => {
+        icon.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = e.target.dataset.id;
+          if (categorias.length <= 1) {
+            alert('Debe haber al menos una categoría.');
+            return;
+          }
+          if (confirm('¿Eliminar esta categoría? También se borrarán los valores asociados en los registros.')) {
+            // eliminar categoría
+            categorias = categorias.filter(c => c.id !== id);
+            // eliminar esa clave de todos los registros
+            registros.forEach(r => { delete r.valores[id]; });
+            guardarEnStorage();
+            renderTodo();
+          }
+        });
+      });
+    }
+
+    // agregar nueva categoría
+    document.getElementById('btnAgregarCategoria').addEventListener('click', () => {
+      const nombre = document.getElementById('nuevaCategoriaNombre').value.trim();
+      const unidad = document.getElementById('nuevaCategoriaUnidad').value.trim();
+      if (!nombre) return;
+      const nueva = {
+        id: 'cat_' + Date.now() + Math.random().toString(36).substr(2, 5),
+        nombre,
+        unidad
+      };
+      categorias.push(nueva);
+      // inicializar valores en registros existentes como 0 (opcional)
+      registros.forEach(r => { r.valores[nueva.id] = 0; });
+      document.getElementById('nuevaCategoriaNombre').value = '';
+      document.getElementById('nuevaCategoriaUnidad').value = '';
+      guardarEnStorage();
+      renderTodo();
+    });
+
+    // ---------- RENDERIZADO DE FORMULARIO (campos por categoría) ----------
+    function renderFormulario() {
+      let html = '';
+      categorias.forEach(cat => {
+        html += `<div class="form-group">
+          <label>${cat.nombre} ${cat.unidad ? '('+cat.unidad+')' : ''}</label>
+          <input type="number" step="0.01" class="cat-input" data-catid="${cat.id}" value="0" required>
+        </div>`;
+      });
+      camposCategoriasDiv.innerHTML = html;
+    }
+
+    // ---------- RENDERIZADO DE ESTADÍSTICAS (totales por categoría) ----------
+    function renderEstadisticas() {
+      let html = '';
+      const totales = {};
+      categorias.forEach(c => totales[c.id] = 0);
+      registros.forEach(r => {
+        categorias.forEach(c => {
+          totales[c.id] += r.valores[c.id] || 0;
+        });
+      });
+
+      categorias.forEach(c => {
+        html += `<div class="stat-item">
+          <h4>${c.nombre}</h4>
+          <div class="value">${totales[c.id].toFixed(1)}</div>
+          ${c.unidad ? `<small>${c.unidad}</small>` : ''}
+        </div>`;
+      });
+      miniStats.innerHTML = html;
+    }
+
+    // ---------- RENDERIZADO DE TABLA (con encabezados dinámicos) ----------
+    function renderTabla() {
+      // Encabezados
+      let headerHtml = '<tr><th>Municipio</th><th>Vereda</th>';
+      categorias.forEach(c => {
+        headerHtml += `<th>${c.nombre}${c.unidad ? '<br><small>'+c.unidad+'</small>' : ''}</th>`;
+      });
+      headerHtml += '<th>Total</th><th></th></tr>';
+      tablaHeader.innerHTML = headerHtml;
+
+      // Cuerpo
+      let bodyHtml = '';
+      if (registros.length === 0) {
+        bodyHtml = '<tr><td colspan="'+(categorias.length+3)+'" style="text-align:center; padding:30px;">No hay registros</td></tr>';
+      } else {
+        registros.slice().reverse().forEach(r => {
+          let total = 0;
+          let fila = `<tr><td>${r.municipio}</td><td>${r.vereda}</td>`;
+          categorias.forEach(c => {
+            const val = r.valores[c.id] || 0;
+            total += val;
+            fila += `<td>${val.toFixed(1)}</td>`;
+          });
+          fila += `<td><span class="badge">${total.toFixed(1)}</span></td>`;
+          fila += `<td class="actions">
+            <i class="fas fa-edit" title="Editar" data-id="${r.id}"></i>
+            <i class="fas fa-trash-alt" title="Eliminar" data-id="${r.id}"></i>
+          </td></tr>`;
+          bodyHtml += fila;
+        });
+      }
+      tablaBody.innerHTML = bodyHtml;
+
+      totalRegistrosSpan.textContent = registros.length;
+    }
+
+    // ---------- GRÁFICO ----------
     function actualizarGrafico(tipo = 'bar') {
       const ctx = document.getElementById('mainChart').getContext('2d');
       if (chartInstance) chartInstance.destroy();
 
-      if (hmpData.length === 0) {
+      if (registros.length === 0 || categorias.length === 0) {
+        chartInstance = new Chart(ctx, { type: 'bar', data: { labels:[], datasets:[] }, options: { responsive: true } });
+        return;
+      }
+
+      const labels = registros.map(r => `${r.municipio.slice(0,3)}-${r.vereda.slice(0,3)} (${r.fecha.slice(5)})`);
+
+      if (tipo === 'pie' || tipo === 'radar') {
+        // sumar todas las categorías
+        const totalPorCat = categorias.map(c => {
+          return registros.reduce((acc, r) => acc + (r.valores[c.id] || 0), 0);
+        });
+        const datasets = [{
+          data: totalPorCat,
+          backgroundColor: ['#36a2eb', '#4bc0c0', '#ff9f40', '#9966ff', '#ff6384', '#8ac24a', '#f06292'],
+          label: 'Total'
+        }];
         chartInstance = new Chart(ctx, {
-          type: 'bar',
-          data: { labels: [], datasets: [] },
+          type: tipo,
+          data: { labels: categorias.map(c => c.nombre), datasets },
           options: { responsive: true, maintainAspectRatio: false }
         });
         return;
       }
 
-      const labels = hmpData.map(e => `${e.municipio.substring(0,3)}-${e.vereda.substring(0,3)} (${e.fecha.slice(5)})`);
-      const datasets = [
-        { label: 'HAS CV', data: hmpData.map(e => e.hectareas.cv), backgroundColor: '#36a2eba0', borderColor: '#1e6f5c', tension: 0.2 },
-        { label: 'HAS AF', data: hmpData.map(e => e.hectareas.af), backgroundColor: '#4bc0c0a0', borderColor: '#1e6f5c' },
-        { label: 'HAS ADP', data: hmpData.map(e => e.hectareas.adp), backgroundColor: '#ff9f40a0', borderColor: '#1e6f5c' },
-        { label: 'HAS MC', data: hmpData.map(e => e.hectareas.mc), backgroundColor: '#9966ffa0', borderColor: '#1e6f5c' },
-        { label: 'HAS EB', data: hmpData.map(e => e.hectareas.eb), backgroundColor: '#ff6384a0', borderColor: '#1e6f5c' },
-      ];
-
-      const options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { position: 'top' } }
-      };
-
-      if (tipo === 'pie') {
-        const totalPorTipo = [0,0,0,0,0];
-        hmpData.forEach(e => {
-          totalPorTipo[0] += e.hectareas.cv;
-          totalPorTipo[1] += e.hectareas.af;
-          totalPorTipo[2] += e.hectareas.adp;
-          totalPorTipo[3] += e.hectareas.mc;
-          totalPorTipo[4] += e.hectareas.eb;
-        });
-        chartInstance = new Chart(ctx, {
-          type: 'pie',
-          data: {
-            labels: ['CV', 'AF', 'ADP', 'MC', 'EB'],
-            datasets: [{
-              data: totalPorTipo,
-              backgroundColor: ['#36a2eb', '#4bc0c0', '#ff9f40', '#9966ff', '#ff6384']
-            }]
-          },
-          options
-        });
-        return;
-      }
-
-      if (tipo === 'radar') {
-        const totalPorTipo = [0,0,0,0,0];
-        hmpData.forEach(e => {
-          totalPorTipo[0] += e.hectareas.cv;
-          totalPorTipo[1] += e.hectareas.af;
-          totalPorTipo[2] += e.hectareas.adp;
-          totalPorTipo[3] += e.hectareas.mc;
-          totalPorTipo[4] += e.hectareas.eb;
-        });
-        chartInstance = new Chart(ctx, {
-          type: 'radar',
-          data: {
-            labels: ['CV', 'AF', 'ADP', 'MC', 'EB'],
-            datasets: [{
-              label: 'Total HAS por categoría',
-              data: totalPorTipo,
-              backgroundColor: '#36a2eb40',
-              borderColor: '#1e6f5c',
-              pointBackgroundColor: '#1e6f5c'
-            }]
-          },
-          options
-        });
-        return;
-      }
+      // barras o líneas: un dataset por categoría
+      const datasets = categorias.map((c, idx) => ({
+        label: c.nombre + (c.unidad ? ` (${c.unidad})` : ''),
+        data: registros.map(r => r.valores[c.id] || 0),
+        backgroundColor: `hsl(${idx * 60}, 70%, 70%)`,
+        borderColor: `hsl(${idx * 60}, 70%, 40%)`,
+        borderWidth: 1,
+        tension: 0.2
+      }));
 
       chartInstance = new Chart(ctx, {
         type: tipo,
         data: { labels, datasets },
-        options
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
       });
     }
 
-    function refreshUI() {
-      actualizarTabla();
+    // ---------- REFRESCAR TODO ----------
+    function renderTodo() {
+      renderCategorias();
+      renderFormulario();
+      renderEstadisticas();
+      renderTabla();
       const activeType = document.querySelector('.chart-type-btn.active')?.dataset.type || 'bar';
       actualizarGrafico(activeType);
       guardarEnStorage();
     }
 
-    // ----- MANEJADOR FORMULARIO (agregar) -----
-    form.addEventListener('submit', (e) => {
+    // ---------- MANEJADOR DE FORMULARIO (agregar registro) ----------
+    document.getElementById('registroForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const municipio = document.getElementById('municipio').value.trim();
       const vereda = document.getElementById('vereda').value.trim();
       const responsable = document.getElementById('responsable').value.trim();
       const fecha = document.getElementById('fecha').value;
-      const cv = parseFloat(document.getElementById('cv').value) || 0;
-      const af = parseFloat(document.getElementById('af').value) || 0;
-      const adp = parseFloat(document.getElementById('adp').value) || 0;
-      const mc = parseFloat(document.getElementById('mc').value) || 0;
-      const eb = parseFloat(document.getElementById('eb').value) || 0;
       if (!municipio || !vereda || !responsable || !fecha) return;
 
-      const newEntry = {
+      // recolectar valores de categorías
+      const valores = {};
+      document.querySelectorAll('.cat-input').forEach(input => {
+        const catId = input.dataset.catid;
+        valores[catId] = parseFloat(input.value) || 0;
+      });
+
+      const nuevo = {
         id: Date.now(),
         municipio,
         vereda,
         responsable,
         fecha,
-        hectareas: { cv, af, adp, mc, eb },
-        total: cv + af + adp + mc + eb
+        valores
       };
-      hmpData.push(newEntry);
-      refreshUI();
-      form.reset();
+      registros.push(nuevo);
+      renderTodo();
+      e.target.reset();
       document.getElementById('fecha').valueAsDate = new Date();
-      csvStatus.textContent = ''; // limpiar mensajes
     });
 
-    // ----- DELEGACIÓN DE EVENTOS (editar/eliminar) -----
-    document.getElementById('tablaBody').addEventListener('click', (e) => {
-      const target = e.target;
-      if (target.classList.contains('fa-trash-alt') || target.classList.contains('fa-edit')) {
-        const id = Number(target.closest('i').dataset.id);
-        if (target.classList.contains('fa-trash-alt')) {
-          if (confirm('¿Eliminar este registro?')) {
-            hmpData = hmpData.filter(entry => entry.id !== id);
-            refreshUI();
-          }
-        } else if (target.classList.contains('fa-edit')) {
-          const entry = hmpData.find(e => e.id === id);
-          if (!entry) return;
-          document.getElementById('municipio').value = entry.municipio;
-          document.getElementById('vereda').value = entry.vereda;
-          document.getElementById('responsable').value = entry.responsable;
-          document.getElementById('fecha').value = entry.fecha;
-          document.getElementById('cv').value = entry.hectareas.cv;
-          document.getElementById('af').value = entry.hectareas.af;
-          document.getElementById('adp').value = entry.hectareas.adp;
-          document.getElementById('mc').value = entry.hectareas.mc;
-          document.getElementById('eb').value = entry.hectareas.eb;
-          hmpData = hmpData.filter(e => e.id !== id);
-          refreshUI();
+    // ---------- ELIMINAR / EDITAR REGISTRO (delegación) ----------
+    tablaBody.addEventListener('click', (e) => {
+      const target = e.target.closest('i');
+      if (!target) return;
+      const id = Number(target.dataset.id);
+      if (target.classList.contains('fa-trash-alt')) {
+        if (confirm('¿Eliminar este registro?')) {
+          registros = registros.filter(r => r.id !== id);
+          renderTodo();
         }
+      } else if (target.classList.contains('fa-edit')) {
+        const registro = registros.find(r => r.id === id);
+        if (!registro) return;
+        // cargar en formulario
+        document.getElementById('municipio').value = registro.municipio;
+        document.getElementById('vereda').value = registro.vereda;
+        document.getElementById('responsable').value = registro.responsable;
+        document.getElementById('fecha').value = registro.fecha;
+        // llenar campos de categorías
+        document.querySelectorAll('.cat-input').forEach(input => {
+          const catId = input.dataset.catid;
+          input.value = registro.valores[catId] || 0;
+        });
+        // eliminar el registro original (luego se agregará el editado)
+        registros = registros.filter(r => r.id !== id);
+        renderTodo(); // actualiza gráfico y tabla sin ese registro
       }
     });
 
-    // ----- CAMBIAR TIPO DE GRÁFICO -----
+    // ---------- CAMBIAR TIPO DE GRÁFICO ----------
     document.querySelectorAll('.chart-type-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         document.querySelectorAll('.chart-type-btn').forEach(b => b.classList.remove('active'));
@@ -636,113 +537,113 @@
       });
     });
 
-    // ----- BOTÓN LIMPIAR DATOS -----
+    // ---------- BOTONES GLOBALES ----------
     document.getElementById('btnLimpiarDatos').addEventListener('click', () => {
-      if (confirm('¿Eliminar TODOS los registros?')) {
-        hmpData = [];
-        refreshUI();
-        csvStatus.textContent = '';
+      if (confirm('¿Eliminar TODOS los registros? Las categorías se mantienen.')) {
+        registros = [];
+        renderTodo();
       }
     });
 
-    // ----- BOTÓN EXPORTAR JSON -----
     document.getElementById('btnExportar').addEventListener('click', () => {
-      const dataStr = JSON.stringify(hmpData, null, 2);
+      const dataStr = JSON.stringify({ categorias, registros }, null, 2);
       const blob = new Blob([dataStr], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `hmp_backup_${new Date().toISOString().slice(0,10)}.json`;
+      a.download = `backup_${new Date().toISOString().slice(0,10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
     });
 
-    // ----- CARGA DE ARCHIVO CSV -----
-    btnCargarCSV.addEventListener('click', () => {
-      fileInput.click();
-    });
+    // ---------- CARGA DE CSV ----------
+    document.getElementById('btnCargarCSV').addEventListener('click', () => fileInput.click());
 
     fileInput.addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = (ev) => {
         const csvText = ev.target.result;
-        const registros = parseCSV(csvText);
-        if (registros.length === 0) {
-          csvStatus.textContent = '⚠️ No se encontraron datos válidos';
+        const filas = parseCSV(csvText);
+        if (filas.length === 0) {
+          csvStatus.textContent = '⚠️ CSV vacío';
           return;
         }
 
-        // Convertir cada fila a formato hmpData
+        // Obtener nombres de columnas (encabezados)
+        const headers = Object.keys(filas[0]);
+        // Mapear a categorías: necesitamos que los nombres de columna coincidan con categorías existentes (o parcialmente)
+        // Para simplificar, asumimos que los encabezados son exactamente los nombres de las categorías (sin unidades)
+        const mapCat = {};
+        categorias.forEach(c => {
+          // buscar header que coincida (ignorando mayúsc/minúsc y espacios)
+          const match = headers.find(h => h.trim().toLowerCase() === c.nombre.trim().toLowerCase());
+          if (match) mapCat[c.id] = match;
+        });
+
         let agregados = 0;
-        registros.forEach(row => {
-          // Extraer valores (se esperan columnas: municipio, vereda, responsable, fecha, cv, af, adp, mc, eb)
-          const municipio = row.municipio || row.Municipio || '';
-          const vereda = row.vereda || row.Vereda || '';
-          const responsable = row.responsable || row.Responsable || '';
-          const fecha = row.fecha || row.Fecha || new Date().toISOString().slice(0,10);
-          const cv = parseFloat(row.cv || row.CV || row.cv || 0);
-          const af = parseFloat(row.af || row.AF || row.af || 0);
-          const adp = parseFloat(row.adp || row.ADP || row.adp || 0);
-          const mc = parseFloat(row.mc || row.MC || row.mc || 0);
-          const eb = parseFloat(row.eb || row.EB || row.eb || 0);
+        filas.forEach(fila => {
+          const municipio = fila.municipio || fila.Municipio || '';
+          const vereda = fila.vereda || fila.Vereda || '';
+          const responsable = fila.responsable || fila.Responsable || '';
+          const fecha = fila.fecha || fila.Fecha || new Date().toISOString().slice(0,10);
+          if (!municipio || !vereda || !responsable) return;
 
-          if (!municipio || !vereda || !responsable) return; // campos obligatorios
+          const valores = {};
+          categorias.forEach(c => {
+            const col = mapCat[c.id];
+            if (col && fila[col] !== undefined && fila[col] !== '') {
+              valores[c.id] = parseFloat(fila[col]) || 0;
+            } else {
+              valores[c.id] = 0;
+            }
+          });
 
-          const newEntry = {
-            id: Date.now() + agregados + Math.random(), // id único
+          registros.push({
+            id: Date.now() + agregados + Math.random(),
             municipio,
             vereda,
             responsable,
             fecha,
-            hectareas: { cv, af, adp, mc, eb },
-            total: cv + af + adp + mc + eb
-          };
-          hmpData.push(newEntry);
+            valores
+          });
           agregados++;
         });
 
         if (agregados > 0) {
-          refreshUI();
+          renderTodo();
           csvStatus.textContent = `✅ ${agregados} registros cargados`;
         } else {
-          csvStatus.textContent = '⚠️ Ningún registro válido';
+          csvStatus.textContent = '⚠️ No se encontraron registros válidos';
         }
-        fileInput.value = ''; // reset
+        fileInput.value = '';
       };
       reader.readAsText(file);
     });
 
-    // Parseador simple de CSV (asume primera fila de encabezados, separador coma)
+    // Parseador simple de CSV (con soporte básico de comillas)
     function parseCSV(texto) {
       const lineas = texto.trim().split(/\r?\n/);
       if (lineas.length < 2) return [];
-
-      const cabecera = lineas[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
+      const cabecera = lineas[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
       const datos = [];
-
       for (let i = 1; i < lineas.length; i++) {
         if (lineas[i].trim() === '') continue;
-        // Manejo básico de comillas dobles (no multilínea)
         let valores = [];
-        let dentroComillas = false;
-        let valorActual = '';
+        let dentro = false;
+        let valActual = '';
         for (let char of lineas[i]) {
-          if (char === '"' && !dentroComillas) {
-            dentroComillas = true;
-          } else if (char === '"' && dentroComillas) {
-            dentroComillas = false;
-          } else if (char === ',' && !dentroComillas) {
-            valores.push(valorActual.trim());
-            valorActual = '';
+          if (char === '"' && !dentro) dentro = true;
+          else if (char === '"' && dentro) dentro = false;
+          else if (char === ',' && !dentro) {
+            valores.push(valActual.trim());
+            valActual = '';
           } else {
-            valorActual += char;
+            valActual += char;
           }
         }
-        valores.push(valorActual.trim()); // último campo
-
+        valores.push(valActual.trim());
         const fila = {};
         cabecera.forEach((campo, idx) => {
           fila[campo] = valores[idx] !== undefined ? valores[idx].replace(/^"|"$/g, '') : '';
@@ -752,26 +653,23 @@
       return datos;
     }
 
-    // ----- DESCARGA PLANTILLA CSV -----
-    btnDescargarPlantilla.addEventListener('click', () => {
-      const cabecera = ['municipio','vereda','responsable','fecha','cv','af','adp','mc','eb'];
-      const filaEjemplo = ['San Lorenzo','El Progreso','Ana López','2025-03-01','5.2','3.1','1.5','4.0','2.3'];
-      const contenido = [cabecera.join(','), filaEjemplo.join(',')].join('\n');
+    // ---------- DESCARGA PLANTILLA CSV ----------
+    document.getElementById('btnDescargarPlantilla').addEventListener('click', () => {
+      const headers = ['municipio', 'vereda', 'responsable', 'fecha', ...categorias.map(c => c.nombre)];
+      const ejemplo = ['San Lorenzo', 'El Progreso', 'Ana López', '2025-03-01', ...categorias.map(() => '0')];
+      const contenido = [headers.join(','), ejemplo.join(',')].join('\n');
       const blob = new Blob([contenido], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'plantilla_hmp.csv';
+      a.download = 'plantilla_proyecto.csv';
       a.click();
       URL.revokeObjectURL(url);
     });
 
-    // ----- INICIALIZAR FECHA ACTUAL EN CABECERA -----
-    document.getElementById('fechaActual').textContent = new Date().toLocaleDateString('es-ES', { year:'numeric', month:'long', day:'numeric' });
-
-    // ----- CARGA INICIAL -----
+    // ---------- INICIALIZACIÓN ----------
     cargarDeStorage();
-    refreshUI();
+    renderTodo();
   })();
 </script>
 </body>
