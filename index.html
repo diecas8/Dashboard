@@ -3,266 +3,776 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard HMP - Interactivo</title>
+  <title>Dashboard HMP · CSV + Interactivo</title>
+  <!-- Chart.js, Font Awesome, Google Fonts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
+    * {
       margin: 0;
       padding: 0;
-      background-color: #f9f9f9;
-      color: #333;
+      box-sizing: border-box;
     }
-    .container {
-      width: 85%;
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f7fb;
+      color: #1a2639;
+      padding: 24px;
+    }
+    .dashboard {
+      max-width: 1400px;
       margin: 0 auto;
-      padding-top: 20px;
     }
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #4CAF50;
+      background: linear-gradient(135deg, #0b3b2c, #1e6f5c);
       color: white;
-      padding: 20px;
-      border-radius: 10px;
+      padding: 22px 32px;
+      border-radius: 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 12px 24px -8px rgba(0,60,40,0.3);
     }
     .header h1 {
-      margin: 0;
-      font-size: 1.5em;
+      font-weight: 600;
+      font-size: 1.9rem;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header h1 i {
+      font-size: 2.2rem;
+    }
+    .header-right {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+    .badge-date {
+      background: rgba(255,255,255,0.15);
+      padding: 8px 18px;
+      border-radius: 60px;
+      font-weight: 500;
+      backdrop-filter: blur(4px);
+    }
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+      margin-bottom: 28px;
     }
     .card {
-      background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.02), 0 2px 6px rgba(0,40,20,0.05);
+      border: 1px solid #e6edf4;
+      transition: box-shadow 0.2s;
+    }
+    .card:hover {
+      box-shadow: 0 16px 28px -8px rgba(20,80,60,0.12);
     }
     .card-title {
-      font-size: 1.2em;
-      margin-bottom: 10px;
-      color: #333;
+      font-weight: 600;
+      font-size: 1.3rem;
+      margin-bottom: 18px;
+      color: #0f3d3a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px dashed #cbd5e1;
+      padding-bottom: 10px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
     }
     .form-group {
-      margin-bottom: 20px;
-    }
-    .form-group input, .form-group select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 5px;
-      border: 1px solid #ddd;
-      font-size: 1em;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
     }
     .form-group label {
-      font-weight: bold;
-      color: #555;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #2c4a4a;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
     }
-    .button {
-      background-color: #28a745;
-      color: white;
+    .form-group input, .form-group select {
+      padding: 12px 16px;
+      border: 1.5px solid #dde7f0;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      transition: 0.2s;
+      background: #f9fcff;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: #1e6f5c;
+      box-shadow: 0 0 0 3px rgba(30,111,92,0.2);
+      background: white;
+    }
+    .button-primary {
+      background: #1e6f5c;
       border: none;
-      padding: 12px 20px;
-      border-radius: 5px;
-      font-size: 1em;
+      color: white;
+      font-weight: 600;
+      padding: 14px 24px;
+      border-radius: 40px;
+      font-size: 1rem;
       cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    .button:hover {
-      background-color: #218838;
-    }
-    #chart-container {
-      margin-top: 30px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 6px 12px rgba(30,111,92,0.3);
       width: 100%;
-      height: 400px;
+      margin-top: 8px;
     }
-    .card-stats {
+    .button-primary:hover {
+      background: #0f4f3f;
+      transform: scale(1.01);
+      box-shadow: 0 10px 18px rgba(20,80,60,0.4);
+    }
+    .button-secondary {
+      background: white;
+      border: 1.5px solid #cbd5e1;
+      color: #2c4a4a;
+      padding: 10px 16px;
+      border-radius: 40px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .button-secondary:hover {
+      background: #f1f9f6;
+      border-color: #1e6f5c;
+    }
+    .stats-mini {
       display: flex;
-      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
       margin-top: 20px;
     }
-    .stat-box {
-      background-color: #f0f9f1;
-      padding: 15px;
-      border-radius: 8px;
+    .stat-item {
+      flex: 1 0 100px;
+      background: #f1f9f6;
+      border-radius: 20px;
+      padding: 14px 8px;
       text-align: center;
-      width: 18%;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid #c0e0d6;
     }
-    .stat-box h3 {
-      font-size: 1.5em;
-      margin-bottom: 5px;
-      color: #28a745;
+    .stat-item h4 {
+      font-size: 0.8rem;
+      color: #0f4f3f;
+      font-weight: 500;
     }
-    .stat-box p {
-      font-size: 1.1em;
-      color: #555;
+    .stat-item .value {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #0b3b2c;
+      line-height: 1.2;
+    }
+    .table-wrapper {
+      max-height: 280px;
+      overflow-y: auto;
+      border-radius: 20px;
+      border: 1px solid #e2eef2;
+      margin-top: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+    th {
+      background: #e2f0ec;
+      color: #0b3b2c;
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 12px 8px;
+      position: sticky;
+      top: 0;
+    }
+    td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #d1e2e8;
+      font-size: 0.85rem;
+    }
+    .actions i {
+      margin: 0 5px;
+      color: #4b6b6b;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .actions i:hover {
+      color: #1e6f5c;
+      transform: scale(1.1);
+    }
+    .badge {
+      background: #cbe9e1;
+      padding: 4px 8px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #0b3b2c;
+    }
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .chart-type-selector {
+      display: flex;
+      gap: 8px;
+      background: #eef5f2;
+      padding: 5px;
+      border-radius: 48px;
+    }
+    .chart-type-btn {
+      background: transparent;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 40px;
+      font-weight: 500;
+      color: #2c4a4a;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .chart-type-btn.active {
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      color: #1e6f5c;
+      font-weight: 600;
+    }
+    .chart-container {
+      position: relative;
+      height: 340px;
+      width: 100%;
+    }
+    .footer-bar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .csv-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      align-items: center;
+    }
+    #fileInput {
+      display: none;
+    }
+    .toast-message {
+      background: #1e6f5c;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 60px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-left: auto;
     }
   </style>
 </head>
 <body>
-
-<div class="container">
+<div class="dashboard">
+  <!-- CABECERA -->
   <div class="header">
-    <h1>Dashboard de HMP</h1>
+    <h1><i class="fas fa-seedling"></i> Dashboard HMP · Monitoreo de Hectáreas</h1>
+    <div class="header-right">
+      <span class="badge-date"><i class="far fa-calendar-alt"></i> <span id="fechaActual"></span></span>
+      <span class="badge-date"><i class="fas fa-database"></i> <span id="totalRegistros">0</span> registros</span>
+    </div>
   </div>
 
-  <div class="card">
-    <h2 class="card-title">Ingreso de Datos HMP</h2>
-    <form id="hmpForm">
-      <div class="form-group">
-        <label for="municipio">Municipio:</label>
-        <input type="text" id="municipio" required>
-      </div>
-      <div class="form-group">
-        <label for="vereda">Vereda:</label>
-        <input type="text" id="vereda" required>
-      </div>
-      <div class="form-group">
-        <label for="responsable">Responsable:</label>
-        <input type="text" id="responsable" required>
-      </div>
-      <div class="form-group">
-        <label for="cv">HAS CV:</label>
-        <input type="number" id="cv" required>
-      </div>
-      <div class="form-group">
-        <label for="af">HAS AF:</label>
-        <input type="number" id="af" required>
-      </div>
-      <div class="form-group">
-        <label for="adp">HAS ADP:</label>
-        <input type="number" id="adp" required>
-      </div>
-      <div class="form-group">
-        <label for="mc">HAS MC:</label>
-        <input type="number" id="mc" required>
-      </div>
-      <div class="form-group">
-        <label for="eb">HAS EB:</label>
-        <input type="number" id="eb" required>
-      </div>
-      <button type="submit" class="button">Agregar HMP</button>
-    </form>
-  </div>
+  <!-- COLUMNAS: FORMULARIO + TABLA -->
+  <div class="grid-2col">
+    <!-- Tarjeta: formulario de ingreso y carga CSV -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-pen-alt"></i> Ingresar nueva medición HMP</div>
+      <form id="hmpForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label><i class="fas fa-map-marker-alt"></i> Municipio</label>
+            <input type="text" id="municipio" placeholder="Ej. San Lorenzo" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-tree"></i> Vereda</label>
+            <input type="text" id="vereda" placeholder="Ej. El Progreso" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-user-check"></i> Responsable</label>
+            <input type="text" id="responsable" placeholder="Nombre completo" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-calendar"></i> Fecha</label>
+            <input type="date" id="fecha" required>
+          </div>
+        </div>
+        <div style="margin: 12px 0 8px; font-weight: 600; color: #1e6f5c;">Hectáreas por categoría</div>
+        <div class="form-grid">
+          <div class="form-group"><label>HAS CV</label><input type="number" id="cv" step="0.1" value="0" required></div>
+          <div class="form-group"><label>HAS AF</label><input type="number" id="af" step="0.1" value="0" required></div>
+          <div class="form-group"><label>HAS ADP</label><input type="number" id="adp" step="0.1" value="0" required></div>
+          <div class="form-group"><label>HAS MC</label><input type="number" id="mc" step="0.1" value="0" required></div>
+          <div class="form-group"><label>HAS EB</label><input type="number" id="eb" step="0.1" value="0" required></div>
+        </div>
+        <button type="submit" class="button-primary"><i class="fas fa-plus-circle"></i> Agregar registro</button>
+      </form>
 
-  <div class="card">
-    <h2 class="card-title">Indicadores de Crecimiento</h2>
-    <div class="card-stats">
-      <div class="stat-box">
-        <h3>Retención</h3>
-        <p>99.28%</p>
+      <!-- Área de carga CSV y descarga de plantilla -->
+      <div class="csv-actions">
+        <input type="file" id="fileInput" accept=".csv, text/csv">
+        <button class="button-secondary" id="btnCargarCSV"><i class="fas fa-upload"></i> Cargar CSV</button>
+        <button class="button-secondary" id="btnDescargarPlantilla"><i class="fas fa-download"></i> Plantilla CSV</button>
+        <span id="csvStatus" class="toast-message"></span>
       </div>
-      <div class="stat-box">
-        <h3>Expansión</h3>
-        <p>2.86%</p>
+
+      <!-- mini stats dinámicas -->
+      <div class="stats-mini" id="miniStats">
+        <div class="stat-item"><h4>Total HAS</h4><div class="value" id="totalHectareas">0</div></div>
+        <div class="stat-item"><h4>HAS CV</h4><div class="value" id="sumCV">0</div></div>
+        <div class="stat-item"><h4>HAS AF</h4><div class="value" id="sumAF">0</div></div>
+        <div class="stat-item"><h4>HAS MC</h4><div class="value" id="sumMC">0</div></div>
       </div>
-      <div class="stat-box">
-        <h3>Ventas</h3>
-        <p>$58,592</p>
+    </div>
+
+    <!-- Tarjeta: tabla de registros e indicadores -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-table"></i> Últimos registros</div>
+      <div class="table-wrapper" id="tablaRegistros">
+        <table>
+          <thead><tr><th>Municipio</th><th>Vereda</th><th>Total HAS</th><th></th></tr></thead>
+          <tbody id="tablaBody"></tbody>
+        </table>
+      </div>
+      <!-- indicadores de crecimiento estáticos -->
+      <div style="display: flex; gap: 16px; margin-top: 20px;">
+        <div style="background: #f9f3e6; border-radius: 20px; padding: 12px 20px; flex:1; border-left: 5px solid #e6b12e;">
+          <small style="color:#9b7b3c;">Retención</small>
+          <div style="font-weight:700; font-size: 1.6rem;">99.28%</div>
+        </div>
+        <div style="background: #e6f1f9; border-radius: 20px; padding: 12px 20px; flex:1; border-left: 5px solid #2e7ab6;">
+          <small style="color:#2a5f7a;">Expansión</small>
+          <div style="font-weight:700; font-size: 1.6rem;">2.86%</div>
+        </div>
+        <div style="background: #e2f0e9; border-radius: 20px; padding: 12px 20px; flex:1; border-left: 5px solid #1e6f5c;">
+          <small style="color:#1e6f5c;">Ventas</small>
+          <div style="font-weight:700; font-size: 1.6rem;">$58.5K</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div id="chart-container">
-    <canvas id="chart"></canvas>
+  <!-- SECCIÓN GRÁFICO INTERACTIVO -->
+  <div class="card" style="margin-top: 8px;">
+    <div class="chart-header">
+      <div class="card-title" style="margin-bottom:0;"><i class="fas fa-chart-bar"></i> Visualización de hectáreas</div>
+      <div class="chart-type-selector" id="chartTypeSelector">
+        <button class="chart-type-btn active" data-type="bar"><i class="fas fa-chart-bar"></i> Barras</button>
+        <button class="chart-type-btn" data-type="line"><i class="fas fa-chart-line"></i> Líneas</button>
+        <button class="chart-type-btn" data-type="radar"><i class="fas fa-radar"></i> Radar</button>
+        <button class="chart-type-btn" data-type="pie"><i class="fas fa-chart-pie"></i> Pastel</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="mainChart"></canvas>
+    </div>
+    <div class="footer-bar">
+      <button class="button-secondary" id="btnLimpiarDatos"><i class="fas fa-trash-alt"></i> Limpiar todo</button>
+      <button class="button-secondary" id="btnExportar"><i class="fas fa-download"></i> Exportar JSON</button>
+    </div>
   </div>
 </div>
 
 <script>
-  const form = document.getElementById('hmpForm');
-  const chartCanvas = document.getElementById('chart');
-  let hmpData = [];
+  (function() {
+    // ----- CONSTANTES Y ESTADO -----
+    const STORAGE_KEY = 'hmp_detailed_data';
+    let hmpData = [];               // cada objeto: { id, municipio, vereda, responsable, fecha, hectareas: {cv,af,adp,mc,eb}, total }
+    let chartInstance = null;
 
-  form.addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    const municipio = document.getElementById('municipio').value;
-    const vereda = document.getElementById('vereda').value;
-    const responsable = document.getElementById('responsable').value;
-    const cv = parseFloat(document.getElementById('cv').value);
-    const af = parseFloat(document.getElementById('af').value);
-    const adp = parseFloat(document.getElementById('adp').value);
-    const mc = parseFloat(document.getElementById('mc').value);
-    const eb = parseFloat(document.getElementById('eb').value);
+    // elementos del DOM
+    const form = document.getElementById('hmpForm');
+    const tablaBody = document.getElementById('tablaBody');
+    const totalRegistrosSpan = document.getElementById('totalRegistros');
+    const totalHectareasSpan = document.getElementById('totalHectareas');
+    const sumCV = document.getElementById('sumCV');
+    const sumAF = document.getElementById('sumAF');
+    const sumMC = document.getElementById('sumMC');
+    const csvStatus = document.getElementById('csvStatus');
+    const fileInput = document.getElementById('fileInput');
+    const btnCargarCSV = document.getElementById('btnCargarCSV');
+    const btnDescargarPlantilla = document.getElementById('btnDescargarPlantilla');
 
-    const hmpEntry = {
-      municipio,
-      vereda,
-      responsable,
-      hectareas: { cv, af, adp, mc, eb },
-      total: cv + af + adp + mc + eb
-    };
+    // fecha actual por defecto
+    document.getElementById('fecha').valueAsDate = new Date();
 
-    hmpData.push(hmpEntry);
+    // ----- FUNCIONES DE PERSISTENCIA -----
+    function guardarEnStorage() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(hmpData));
+    }
 
-    // Reset the form
-    form.reset();
+    function cargarDeStorage() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        try { hmpData = JSON.parse(stored); } catch(e){ hmpData = []; }
+      } else {
+        // datos de ejemplo
+        hmpData = [
+          { id: Date.now() - 10000, municipio: 'San Lorenzo', vereda: 'El Progreso', responsable: 'Ana López', fecha: '2025-02-10', hectareas: { cv: 5.2, af: 3.1, adp: 1.5, mc: 4.0, eb: 2.3 }, total: 16.1 },
+          { id: Date.now() - 5000, municipio: 'Santa Rosa', vereda: 'La Laguna', responsable: 'Carlos Díaz', fecha: '2025-02-14', hectareas: { cv: 2.8, af: 6.0, adp: 2.2, mc: 1.1, eb: 3.4 }, total: 15.5 },
+        ];
+      }
+    }
 
-    // Update the chart
-    updateChart();
-  });
+    // ----- FUNCIONES DE ACTUALIZACIÓN DE UI -----
+    function actualizarTabla() {
+      const tbody = tablaBody;
+      tbody.innerHTML = '';
+      if (hmpData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:30px;">No hay registros</td></tr>';
+      } else {
+        hmpData.slice().reverse().forEach(entry => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${entry.municipio}</td>
+            <td>${entry.vereda}</td>
+            <td><span class="badge">${entry.total.toFixed(1)} HAS</span></td>
+            <td class="actions">
+              <i class="fas fa-edit" title="Editar" data-id="${entry.id}"></i>
+              <i class="fas fa-trash-alt" title="Eliminar" data-id="${entry.id}"></i>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
 
-  function updateChart() {
-    const labels = hmpData.map(entry => `${entry.municipio} - ${entry.vereda}`);
-    const dataCV = hmpData.map(entry => entry.hectareas.cv);
-    const dataAF = hmpData.map(entry => entry.hectareas.af);
-    const dataADP = hmpData.map(entry => entry.hectareas.adp);
-    const dataMC = hmpData.map(entry => entry.hectareas.mc);
-    const dataEB = hmpData.map(entry => entry.hectareas.eb);
+      totalRegistrosSpan.textContent = hmpData.length;
 
-    const chartData = {
-      labels: labels,
-      datasets: [{
-        label: 'HAS CV',
-        data: dataCV,
-        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 1
-      }, {
-        label: 'HAS AF',
-        data: dataAF,
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1
-      }, {
-        label: 'HAS ADP',
-        data: dataADP,
-        backgroundColor: 'rgba(255, 159, 64, 0.2)',
-        borderColor: 'rgba(255, 159, 64, 1)',
-        borderWidth: 1
-      }, {
-        label: 'HAS MC',
-        data: dataMC,
-        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-        borderColor: 'rgba(153, 102, 255, 1)',
-        borderWidth: 1
-      }, {
-        label: 'HAS EB',
-        data: dataEB,
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1
-      }]
-    };
+      let totalH = 0, sum_cv = 0, sum_af = 0, sum_mc = 0;
+      hmpData.forEach(e => {
+        totalH += e.total || 0;
+        sum_cv += e.hectareas.cv || 0;
+        sum_af += e.hectareas.af || 0;
+        sum_mc += e.hectareas.mc || 0;
+      });
+      totalHectareasSpan.textContent = totalH.toFixed(1);
+      sumCV.textContent = sum_cv.toFixed(1);
+      sumAF.textContent = sum_af.toFixed(1);
+      sumMC.textContent = sum_mc.toFixed(1);
+    }
 
-    const chartOptions = {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true
+    function actualizarGrafico(tipo = 'bar') {
+      const ctx = document.getElementById('mainChart').getContext('2d');
+      if (chartInstance) chartInstance.destroy();
+
+      if (hmpData.length === 0) {
+        chartInstance = new Chart(ctx, {
+          type: 'bar',
+          data: { labels: [], datasets: [] },
+          options: { responsive: true, maintainAspectRatio: false }
+        });
+        return;
+      }
+
+      const labels = hmpData.map(e => `${e.municipio.substring(0,3)}-${e.vereda.substring(0,3)} (${e.fecha.slice(5)})`);
+      const datasets = [
+        { label: 'HAS CV', data: hmpData.map(e => e.hectareas.cv), backgroundColor: '#36a2eba0', borderColor: '#1e6f5c', tension: 0.2 },
+        { label: 'HAS AF', data: hmpData.map(e => e.hectareas.af), backgroundColor: '#4bc0c0a0', borderColor: '#1e6f5c' },
+        { label: 'HAS ADP', data: hmpData.map(e => e.hectareas.adp), backgroundColor: '#ff9f40a0', borderColor: '#1e6f5c' },
+        { label: 'HAS MC', data: hmpData.map(e => e.hectareas.mc), backgroundColor: '#9966ffa0', borderColor: '#1e6f5c' },
+        { label: 'HAS EB', data: hmpData.map(e => e.hectareas.eb), backgroundColor: '#ff6384a0', borderColor: '#1e6f5c' },
+      ];
+
+      const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'top' } }
+      };
+
+      if (tipo === 'pie') {
+        const totalPorTipo = [0,0,0,0,0];
+        hmpData.forEach(e => {
+          totalPorTipo[0] += e.hectareas.cv;
+          totalPorTipo[1] += e.hectareas.af;
+          totalPorTipo[2] += e.hectareas.adp;
+          totalPorTipo[3] += e.hectareas.mc;
+          totalPorTipo[4] += e.hectareas.eb;
+        });
+        chartInstance = new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: ['CV', 'AF', 'ADP', 'MC', 'EB'],
+            datasets: [{
+              data: totalPorTipo,
+              backgroundColor: ['#36a2eb', '#4bc0c0', '#ff9f40', '#9966ff', '#ff6384']
+            }]
+          },
+          options
+        });
+        return;
+      }
+
+      if (tipo === 'radar') {
+        const totalPorTipo = [0,0,0,0,0];
+        hmpData.forEach(e => {
+          totalPorTipo[0] += e.hectareas.cv;
+          totalPorTipo[1] += e.hectareas.af;
+          totalPorTipo[2] += e.hectareas.adp;
+          totalPorTipo[3] += e.hectareas.mc;
+          totalPorTipo[4] += e.hectareas.eb;
+        });
+        chartInstance = new Chart(ctx, {
+          type: 'radar',
+          data: {
+            labels: ['CV', 'AF', 'ADP', 'MC', 'EB'],
+            datasets: [{
+              label: 'Total HAS por categoría',
+              data: totalPorTipo,
+              backgroundColor: '#36a2eb40',
+              borderColor: '#1e6f5c',
+              pointBackgroundColor: '#1e6f5c'
+            }]
+          },
+          options
+        });
+        return;
+      }
+
+      chartInstance = new Chart(ctx, {
+        type: tipo,
+        data: { labels, datasets },
+        options
+      });
+    }
+
+    function refreshUI() {
+      actualizarTabla();
+      const activeType = document.querySelector('.chart-type-btn.active')?.dataset.type || 'bar';
+      actualizarGrafico(activeType);
+      guardarEnStorage();
+    }
+
+    // ----- MANEJADOR FORMULARIO (agregar) -----
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const municipio = document.getElementById('municipio').value.trim();
+      const vereda = document.getElementById('vereda').value.trim();
+      const responsable = document.getElementById('responsable').value.trim();
+      const fecha = document.getElementById('fecha').value;
+      const cv = parseFloat(document.getElementById('cv').value) || 0;
+      const af = parseFloat(document.getElementById('af').value) || 0;
+      const adp = parseFloat(document.getElementById('adp').value) || 0;
+      const mc = parseFloat(document.getElementById('mc').value) || 0;
+      const eb = parseFloat(document.getElementById('eb').value) || 0;
+      if (!municipio || !vereda || !responsable || !fecha) return;
+
+      const newEntry = {
+        id: Date.now(),
+        municipio,
+        vereda,
+        responsable,
+        fecha,
+        hectareas: { cv, af, adp, mc, eb },
+        total: cv + af + adp + mc + eb
+      };
+      hmpData.push(newEntry);
+      refreshUI();
+      form.reset();
+      document.getElementById('fecha').valueAsDate = new Date();
+      csvStatus.textContent = ''; // limpiar mensajes
+    });
+
+    // ----- DELEGACIÓN DE EVENTOS (editar/eliminar) -----
+    document.getElementById('tablaBody').addEventListener('click', (e) => {
+      const target = e.target;
+      if (target.classList.contains('fa-trash-alt') || target.classList.contains('fa-edit')) {
+        const id = Number(target.closest('i').dataset.id);
+        if (target.classList.contains('fa-trash-alt')) {
+          if (confirm('¿Eliminar este registro?')) {
+            hmpData = hmpData.filter(entry => entry.id !== id);
+            refreshUI();
+          }
+        } else if (target.classList.contains('fa-edit')) {
+          const entry = hmpData.find(e => e.id === id);
+          if (!entry) return;
+          document.getElementById('municipio').value = entry.municipio;
+          document.getElementById('vereda').value = entry.vereda;
+          document.getElementById('responsable').value = entry.responsable;
+          document.getElementById('fecha').value = entry.fecha;
+          document.getElementById('cv').value = entry.hectareas.cv;
+          document.getElementById('af').value = entry.hectareas.af;
+          document.getElementById('adp').value = entry.hectareas.adp;
+          document.getElementById('mc').value = entry.hectareas.mc;
+          document.getElementById('eb').value = entry.hectareas.eb;
+          hmpData = hmpData.filter(e => e.id !== id);
+          refreshUI();
         }
       }
-    };
-
-    new Chart(chartCanvas, {
-      type: 'bar',
-      data: chartData,
-      options: chartOptions
     });
-  }
-</script>
 
+    // ----- CAMBIAR TIPO DE GRÁFICO -----
+    document.querySelectorAll('.chart-type-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.chart-type-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        actualizarGrafico(this.dataset.type);
+      });
+    });
+
+    // ----- BOTÓN LIMPIAR DATOS -----
+    document.getElementById('btnLimpiarDatos').addEventListener('click', () => {
+      if (confirm('¿Eliminar TODOS los registros?')) {
+        hmpData = [];
+        refreshUI();
+        csvStatus.textContent = '';
+      }
+    });
+
+    // ----- BOTÓN EXPORTAR JSON -----
+    document.getElementById('btnExportar').addEventListener('click', () => {
+      const dataStr = JSON.stringify(hmpData, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `hmp_backup_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // ----- CARGA DE ARCHIVO CSV -----
+    btnCargarCSV.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const csvText = ev.target.result;
+        const registros = parseCSV(csvText);
+        if (registros.length === 0) {
+          csvStatus.textContent = '⚠️ No se encontraron datos válidos';
+          return;
+        }
+
+        // Convertir cada fila a formato hmpData
+        let agregados = 0;
+        registros.forEach(row => {
+          // Extraer valores (se esperan columnas: municipio, vereda, responsable, fecha, cv, af, adp, mc, eb)
+          const municipio = row.municipio || row.Municipio || '';
+          const vereda = row.vereda || row.Vereda || '';
+          const responsable = row.responsable || row.Responsable || '';
+          const fecha = row.fecha || row.Fecha || new Date().toISOString().slice(0,10);
+          const cv = parseFloat(row.cv || row.CV || row.cv || 0);
+          const af = parseFloat(row.af || row.AF || row.af || 0);
+          const adp = parseFloat(row.adp || row.ADP || row.adp || 0);
+          const mc = parseFloat(row.mc || row.MC || row.mc || 0);
+          const eb = parseFloat(row.eb || row.EB || row.eb || 0);
+
+          if (!municipio || !vereda || !responsable) return; // campos obligatorios
+
+          const newEntry = {
+            id: Date.now() + agregados + Math.random(), // id único
+            municipio,
+            vereda,
+            responsable,
+            fecha,
+            hectareas: { cv, af, adp, mc, eb },
+            total: cv + af + adp + mc + eb
+          };
+          hmpData.push(newEntry);
+          agregados++;
+        });
+
+        if (agregados > 0) {
+          refreshUI();
+          csvStatus.textContent = `✅ ${agregados} registros cargados`;
+        } else {
+          csvStatus.textContent = '⚠️ Ningún registro válido';
+        }
+        fileInput.value = ''; // reset
+      };
+      reader.readAsText(file);
+    });
+
+    // Parseador simple de CSV (asume primera fila de encabezados, separador coma)
+    function parseCSV(texto) {
+      const lineas = texto.trim().split(/\r?\n/);
+      if (lineas.length < 2) return [];
+
+      const cabecera = lineas[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
+      const datos = [];
+
+      for (let i = 1; i < lineas.length; i++) {
+        if (lineas[i].trim() === '') continue;
+        // Manejo básico de comillas dobles (no multilínea)
+        let valores = [];
+        let dentroComillas = false;
+        let valorActual = '';
+        for (let char of lineas[i]) {
+          if (char === '"' && !dentroComillas) {
+            dentroComillas = true;
+          } else if (char === '"' && dentroComillas) {
+            dentroComillas = false;
+          } else if (char === ',' && !dentroComillas) {
+            valores.push(valorActual.trim());
+            valorActual = '';
+          } else {
+            valorActual += char;
+          }
+        }
+        valores.push(valorActual.trim()); // último campo
+
+        const fila = {};
+        cabecera.forEach((campo, idx) => {
+          fila[campo] = valores[idx] !== undefined ? valores[idx].replace(/^"|"$/g, '') : '';
+        });
+        datos.push(fila);
+      }
+      return datos;
+    }
+
+    // ----- DESCARGA PLANTILLA CSV -----
+    btnDescargarPlantilla.addEventListener('click', () => {
+      const cabecera = ['municipio','vereda','responsable','fecha','cv','af','adp','mc','eb'];
+      const filaEjemplo = ['San Lorenzo','El Progreso','Ana López','2025-03-01','5.2','3.1','1.5','4.0','2.3'];
+      const contenido = [cabecera.join(','), filaEjemplo.join(',')].join('\n');
+      const blob = new Blob([contenido], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'plantilla_hmp.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // ----- INICIALIZAR FECHA ACTUAL EN CABECERA -----
+    document.getElementById('fechaActual').textContent = new Date().toLocaleDateString('es-ES', { year:'numeric', month:'long', day:'numeric' });
+
+    // ----- CARGA INICIAL -----
+    cargarDeStorage();
+    refreshUI();
+  })();
+</script>
 </body>
 </html>
